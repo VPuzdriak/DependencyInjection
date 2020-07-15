@@ -1,5 +1,5 @@
 using System;
-using System.Linq;
+using System.Reflection;
 using DependencyInjection.Descriptors;
 using DependencyInjection.Enums;
 
@@ -55,7 +55,16 @@ namespace DependencyInjection.Builders
 
         public ServiceDescriptorBuilder UsingConstructor(params Type[] constructorArgTypes)
         {
-            Descriptor.ConstructorArgTypes = constructorArgTypes.ToList();
+            ConstructorInfo constructorInfo = Descriptor.ImplementationType.GetConstructor(constructorArgTypes);
+
+            if (constructorInfo == null)
+            {
+                throw new Exception(
+                    $"Appropriate constructor for type {Descriptor.ImplementationType.FullName} not found");
+            }
+
+            Descriptor.ConstructorInfo = constructorInfo;
+
             return this;
         }
     }

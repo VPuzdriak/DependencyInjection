@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using DependencyInjection.Builders;
 using DependencyInjection.Descriptors;
 using DependencyInjection.Enums;
 
@@ -61,9 +62,7 @@ namespace DependencyInjection
 
         private object CreateImplementation(ServiceDescriptor descriptor)
         {
-            ConstructorInfo constructorInfo = GetConstructorInfo(descriptor);
-
-            object[] constructorArgs = constructorInfo.GetParameters()
+            object[] constructorArgs = GetConstructorInfo(descriptor).GetParameters()
                 .Select(p => Resolve(p.ParameterType))
                 .ToArray();
 
@@ -72,9 +71,9 @@ namespace DependencyInjection
 
         private ConstructorInfo GetConstructorInfo(ServiceDescriptor descriptor)
         {
-            return descriptor.GetConstructorInfo() ??
+            return descriptor.ConstructorInfo ??
                    throw new Exception(
-                       $"Appropriate constructor for type {descriptor.ImplementationType.FullName} not found");
+                       $"Constructor of type {descriptor.ImplementationType.FullName} cannot be inferred. Use {nameof(ServiceDescriptorBuilder)}.{nameof(ServiceDescriptorBuilder.UsingConstructor)} method to select constructor");
         }
     }
 }
