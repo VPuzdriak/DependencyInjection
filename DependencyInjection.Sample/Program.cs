@@ -142,9 +142,11 @@ namespace DependencyInjection.Sample
             var builder = new ContainerBuilder();
 
             builder.RegisterType<RandomGuidGenerator>()
+                .As<IGuidGenerator>()
                 .InstancePerDependency();
 
             builder.RegisterType<SomeService>()
+                .UsingConstructor(typeof(IGuidGenerator))
                 .As<ISomeService>()
                 .InstancePerDependency();
 

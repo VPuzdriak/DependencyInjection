@@ -74,7 +74,7 @@ namespace DependencyInjection
         {
             return descriptor.GetConstructorInfo() ??
                    throw new Exception(
-                       $"Constructor of type {descriptor.ImplementationType.FullName} cannot be inferred");
+                       $"Appropriate constructor for type {descriptor.ImplementationType.FullName} not found");
         }
     }
 }

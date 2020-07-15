@@ -30,7 +30,19 @@ namespace DependencyInjection.Descriptors
 
         public ConstructorInfo GetConstructorInfo()
         {
-            ConstructorInfo constructorInfo = ImplementationType.GetConstructor(ConstructorArgTypes.ToArray());
+            if (ConstructorArgTypes.Any())
+            {
+                return ImplementationType.GetConstructor(ConstructorArgTypes.ToArray());
+            }
+
+            ConstructorInfo[] constructorInfos = ImplementationType.GetConstructors();
+
+            if (constructorInfos.Length > 1)
+            {
+                return null;
+            }
+
+            ConstructorInfo constructorInfo = constructorInfos.First();
             return constructorInfo;
         }
     }
